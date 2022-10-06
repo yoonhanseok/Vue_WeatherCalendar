@@ -3,6 +3,7 @@
   <meta charset="UTF-8">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery/1.12.4/jquery.min.js"></script>
+
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <!-- <script src='https://unpkg.com/v-calendar'></script> -->
   
@@ -12,11 +13,18 @@
 <body>
   <div id='app'>
     <div class="tableWrap">
-      <input type="number" id="selectedYear" :value="nowDATE[0]">
-      <select id="selectedMonth">
-        <option v-for="(whatMonth,i) in monthNum" :key= "whatMonth" :value= monthNum>{{ whatMonth }}</option>
-      </select>
-      <button>조회</button>
+      <div class="selectOptionWrap">
+        <input type="number" id="selectedYear" :value="nowDATE[0]">
+        <select id="selectedMonth">
+          <option v-for="(whatMonth,i) in monthNum" :key= "whatMonth" :value= monthNum[i]>{{ whatMonth }}</option>
+        </select>
+        <!-- <button v-for="(whatMonth,i) in monthNum" :key= "whatMonth" :value= monthNum>{{ whatMonth }}월</button> -->
+        <button>조회</button>
+      </div>
+      
+      <div class="selectMonthWrap">
+        <div class="selectMonth"><button><</button>  {{ nowDATE[1] }}월  <button>></button></div>
+      </div>
       <table class="tableBorder">
         <thead>
           <tr>
@@ -25,22 +33,22 @@
         </thead>
         <tbody>
           <tr>
-            <td v-for="(resultCalendarRow_1,i) in resultCalendarRow1" :key="resultCalendarRow_1">{{ resultCalendarRow_1 }}</td>
+            <td v-for="(resultCalendarRow_1,i) in resultCalendarRow1" :key="resultCalendarRow_1" @click="selectDayNum" :class=nowDATE[0]+nowDATE[1]+resultCalendarRow1[i]>{{ resultCalendarRow_1 }}</td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_2,i) in resultCalendarRow2" :key="resultCalendarRow_2">{{ resultCalendarRow_2 }}</td>
+            <td v-for="(resultCalendarRow_2,i) in resultCalendarRow2" :key="resultCalendarRow_2" @click="selectDayNum" :class=resultCalendarRow2[i]>{{ resultCalendarRow_2 }}</td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_3,i) in resultCalendarRow3" :key="resultCalendarRow_3">{{ resultCalendarRow_3 }}</td>
+            <td v-for="(resultCalendarRow_3,i) in resultCalendarRow3" :key="resultCalendarRow_3" :class=resultCalendarRow3[i]>{{ resultCalendarRow_3 }}</td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_4,i) in resultCalendarRow4" :key="resultCalendarRow_4">{{ resultCalendarRow_4 }}</td>
+            <td v-for="(resultCalendarRow_4,i) in resultCalendarRow4" :key="resultCalendarRow_4" :class=resultCalendarRow4[i]>{{ resultCalendarRow_4 }}</td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_5,i) in resultCalendarRow5" :key="resultCalendarRow_5">{{ resultCalendarRow_5 }}</td>
+            <td v-for="(resultCalendarRow_5,i) in resultCalendarRow5" :key="resultCalendarRow_5" :class=resultCalendarRow5[i]>{{ resultCalendarRow_5 }}</td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_6,i) in resultCalendarRow6" :key="resultCalendarRow_6">{{ resultCalendarRow_6 }}</td>
+            <td v-for="(resultCalendarRow_6,i) in resultCalendarRow6" :key="resultCalendarRow_6" :class=resultCalendarRow6[i]>{{ resultCalendarRow_6 }}</td>
           </tr>
         </tbody>
       </table>

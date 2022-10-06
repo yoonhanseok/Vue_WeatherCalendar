@@ -3,6 +3,8 @@ const app = new Vue({
   data() {
     return{
       nowDATE: [2022, 10, 5],
+      selectDATE: '',
+      endDATE: '',
       monthNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       dayList: ['일', '월', '화', '수', '목', '금', '토'],
       monthDAYs: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
@@ -15,17 +17,22 @@ const app = new Vue({
       resultCalendarRow5: [],
       resultCalendarRow6: [],
       leapYear: false,
-      localCODE: [],
-      openweatherURL: '',
-      // selectedDate: null
+      weekTemp: [],
     }
+  },
+  beforeMount() {
+    this.insertWeather()
   },
   mounted() {
     this.leapChecked()
-    this.insertWeather()
   },
 
   methods: {
+    selectDayNum() {
+      var aaaaa = $(td).className()
+      console.log(aaaaa)
+    },
+
     leapChecked() {
       this.resultCalendar = []
 
@@ -96,49 +103,35 @@ const app = new Vue({
       console.log(this.leapYear)
       console.log(this.nowDATE)
     },
+
     insertWeather() {
-      navigator.geolocation.getCurrentPosition(function locationInfo(pos) {
-        var latitude = pos.coords.latitude
-        var longitude = pos.coords.longitude
-        const openWeatherKey = "2f9208d55a53fee47a90364a43a9ef73"
-        var locationURL = "https://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid="+openWeatherKey+"&lang=kr&units=metric"
-        
-        this.localCODE = [latitude, longitude]
-        this.openweatherURL = locationURL
-        console.log(this.localCODE)
-        console.log(this.openweatherURL)
-      })
+      var openWeatherMapURL = "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON&dataCd=ASOS&dateCd=DAY&startDt=20220101&endDt=20220102&stnIds=159"
 
       axios
-        .get(this.openweatherURL)
-        .then(res => {
-          console.log(response.data)
+        .get(openWeatherMapURL)
+        .then(data => {
+          console.log(data.data.response.body.items.item[0].avgTa)
         })
         .catch(error => {
-          console.log("에러 발생 ERROR")
+          console.log("에러 발생 ERROR"+error)
         })
-        // // ===== Ajax를 이용한 위치정보 API START =====
-        // $ajax({
-        //   url: locationURL,
-        //   type: "get",
-        // }).done(function(data){
-        //   var weaIcon = data.weather[0].icon;
-        //   var weaIconURL = "<img src='https://openweathermap.org/img/wn/"+weaIcon+"@2x.png'>"
-  
-        //   $(".nowTemp").append(data.main.temp+"℃,")
-        //   $(".nowWeather").append(data.weather[0].description+" 입니다.")
-        //   $(".yourCityName").append(data.name+" 입니다.")
-        //   $(".weatherIcon").append(weaIconURL)
-
-        //   console.log("날씨 불러오기 성공")
-        // }).fail(function(error){
-        //   console.log(error)
-        // })
-        // // ===== Ajax를 이용한 위치정보 API END =====
-      
     }
-
-  },
-
+  }
 })
 
+
+// {"response":
+//   {"header": {"resultCode":"00","resultMsg":"NORMAL_SERVICE"},
+//     "body":{
+//       "dataType":"JSON",
+//       "items":{
+//         "item":[
+//         {"stnId":"159","stnNm":"부산","tm":"2022-01-01","avgTa":"1.9","minTa":"-3.9","minTaHrmt":"0645","maxTa":"7.4","maxTaHrmt":"1332","mi10MaxRn":"","mi10MaxRnHrmt":"","hr1MaxRn":"","hr1MaxRnHrmt":"","sumRnDur":"","sumRn":"","maxInsWs":"11.7","maxInsWsWd":"320","maxInsWsHrmt":"0017","maxWs":"7.1","maxWsWd":"320","maxWsHrmt":"0635","avgWs":"2.2","hr24SumRws":"1938","maxWd":"320","avgTd":"-16.6","minRhm":"17","minRhmHrmt":"1041","avgRhm":"24.4","avgPv":"1.7","avgPa":"1019.6","maxPs":"1030.8","maxPsHrmt":"1014","minPs":"1026.7","minPsHrmt":"2322","avgPs":"1028.4","ssDur":"9.9","sumSsHr":"9.2","hr1MaxIcsrHrmt":"1200","hr1MaxIcsr":"2.14","sumGsr":"12.72","ddMefs":"","ddMefsHrmt":"","ddMes":"","ddMesHrmt":"","sumDpthFhsc":"","avgTca":"3.4","avgLmac":"0.4","avgTs":"1.0","minTg":"-9.5","avgCm5Te":"3.3","avgCm10Te":"4.1","avgCm20Te":"5.1","avgCm30Te":"6.2","avgM05Te":"7.0","avgM10Te":"11.6","avgM15Te":"14.7","avgM30Te":"19.4","avgM50Te":"19.8","sumLrgEv":"2.6","sumSmlEv":"3.7","n99Rn":"","iscs":"","sumFogDur":""},
+//         {"stnId":"159","stnNm":"부산","tm":"2022-01-02","avgTa":"4.8","minTa":"0.7","minTaHrmt":"0725","maxTa":"11.1","maxTaHrmt":"1402","mi10MaxRn":"","mi10MaxRnHrmt":"","hr1MaxRn":"","hr1MaxRnHrmt":"","sumRnDur":"","sumRn":"","maxInsWs":"7.7","maxInsWsWd":"340","maxInsWsHrmt":"2310","maxWs":"5.0","maxWsWd":"250","maxWsHrmt":"1136","avgWs":"3.0","hr24SumRws":"2623","maxWd":"320","avgTd":"-10.4","minRhm":"18","minRhmHrmt":"0120","avgRhm":"32.9","avgPv":"3.0","avgPa":"1016.1","maxPs":"1026.7","maxPsHrmt":"0001","minPs":"1022.7","minPsHrmt":"1411","avgPs":"1024.7","ssDur":"9.9","sumSsHr":"9.2","hr1MaxIcsrHrmt":"1200","hr1MaxIcsr":"2.06","sumGsr":"12.2","ddMefs":"","ddMefsHrmt":"","ddMes":"","ddMesHrmt":"","sumDpthFhsc":"","avgTca":"0.5","avgLmac":"0.0","avgTs":"3.1","minTg":"-3.2","avgCm5Te":"4.8","avgCm10Te":"4.9","avgCm20Te":"5.5","avgCm30Te":"6.2","avgM05Te":"3.8","avgM10Te":"11.4","avgM15Te":"14.6","avgM30Te":"19.4","avgM50Te":"19.7","sumLrgEv":"2.7","sumSmlEv":"3.8","n99Rn":"","iscs":"","sumFogDur":""}
+//       ]},
+//       "pageNo":1,
+//       "numOfRows":10,
+//       "totalCount":2
+//     }
+//   }
+// }

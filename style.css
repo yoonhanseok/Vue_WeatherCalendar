@@ -4,6 +4,22 @@
   height: 30%;
 }
 
+.selectOptionWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selectMonthWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selectMonth {
+  font-size: 3rem;
+}
+
 .tableBorder {
   position: relative;
   width: 100%;
