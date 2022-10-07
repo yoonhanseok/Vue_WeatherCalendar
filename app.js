@@ -2,13 +2,15 @@ const app = new Vue({
   el: '#app',
   data() {
     return{
-      nowDATE: [2022, 10, 5],
+      nowDATE: [2022, 7, 5],
       selectDATE: '',
+      selectendDATE: '',
+      startDATE: '',
       endDATE: '',
       monthNum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       dayList: ['일', '월', '화', '수', '목', '금', '토'],
       monthDAYs: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
-      HOWDAYS: 30,
+      HOWDAYS: '',
       resultCalendar: [],
       resultCalendarRow1: [],
       resultCalendarRow2: [],
@@ -17,32 +19,88 @@ const app = new Vue({
       resultCalendarRow5: [],
       resultCalendarRow6: [],
       leapYear: false,
+      // weatherAPI: 'https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON&dataCd=ASOS&dateCd=DAY&startDt=20220101&endDt=20220102&stnIds=159',
       weekTemp: [],
     }
   },
-  beforeMount() {
+  created() {
+    
+    this.leapChecked()
+    console.log("BEFORE AXIOS ACCESS")
     this.insertWeather()
   },
-  mounted() {
-    this.leapChecked()
-  },
+  // mounted() {
+  //   this.leapChecked()
+  // },
 
   methods: {
+    monthMOVER(){
+      if(this.nowDATE[1] == 12){
+        this.nowDATE[1] = 1
+        this.nowDATE[0]++
+        console.log(this.nowDATE)
+      } else {
+        this.nowDATE[1]++
+        console.log(this.nowDATE)
+      }
+    },
+
     selectDayNum() {
-      var aaaaa = $(td).className()
-      console.log(aaaaa)
+      if(this.selectDATE < 10) {
+        this.selectendDATE = Number(this.selectDATE)+6
+        this.selectDATE = '0'+this.selectDATE
+      } else {
+        this.selectendDATE = Number(this.selectDATE)+6
+      }
+
+      if(this.selectendDATE < 10) {
+        this.selectendDATE = '0' + String(this.selectendDATE)
+      } else {
+        this.selectendDATE = String(this.selectendDATE)
+      }
+
+      this.startDATE = this.nowDATE[0]+this.nowDATE[1]+this.selectDATE
+
+      if(Number(this.selectDATE) == Number(this.HOWDAYS)) {
+        this.endDATE = this.nowDATE[0]+this.nowDATE[1]+this.HOWDAYS
+        console.log("1: this.selectDATE) == Number(this.HOWDAYS)")
+      } 
+      else if(Number(this.selectDATE) < Number(this.HOWDAYS)-6) {
+        this.endDATE = this.nowDATE[0]+this.nowDATE[1]+this.selectendDATE
+        console.log("2: Number(this.selectDATE) < Number(this.HOWDAYS)-6")
+      } 
+      else {
+        this.endDATE = this.nowDATE[0]+this.nowDATE[1]+this.HOWDAYS
+      }
+
+      // this.weatherAPI = "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON&dataCd=ASOS&dateCd=DAY&startDt="+this.startDATE+"&endDt="+this.endDATE+"&stnIds=159"
+       
+      console.log(this.selectDATE)
+      console.log(this.selectendDATE)
+      console.log(this.startDATE)
+      console.log(this.endDATE)
+      // console.log(this.weatherAPI)
     },
 
     leapChecked() {
       this.resultCalendar = []
 
-      var getDATE = new Date()
-      var getYEAR = String(getDATE.getFullYear())
-      var getMonth = String(getDATE.getMonth() + 1)
-      var getDAYS = String(getDATE.getDate() < 10 ? '0' + getDATE.getDate() : getDATE.getDate())
-      var nowDAYS = new Date(getYEAR+"-"+getMonth+"-01").getDay()
-      this.nowDATE = [getYEAR, getMonth, getDAYS]
+      var getDATE = new Date() // 현재 날짜
+      var getYEAR = String(getDATE.getFullYear()) // 현재 년도
+      var getMonth = String(getDATE.getMonth() + 1) // 현재 월
+      var getDAYS = String(getDATE.getDate()) // 현재 일
+      var nowDAYS = new Date(getYEAR+"-"+getMonth+"-01").getDay() // 현재 요일
+      this.nowDATE = [getYEAR, getMonth, getDAYS] // nowDATE로 현재 년월일 데이터 보내기
+      this.HOWDAYS = String(this.monthDAYs[getDATE.getMonth()])
 
+      console.log(getDATE)
+      console.log(getYEAR)
+      console.log(getMonth)
+      console.log(getDAYS)
+      console.log(nowDAYS)
+      console.log(this.HOWDAYS)
+
+      // <===== 윤년 체크하기 START =====>
       if(this.nowDATE[0]%400 == 0) {
         this.leapYear = true
         this.monthDAYs[1] = 29
@@ -56,8 +114,9 @@ const app = new Vue({
         this.leapYear = false
         this.monthDAYs[1] = 28
       }
+      // <===== 윤년 체크하기 END =====>
 
-      var HOWDAYs = this.monthDAYs[getDATE.getMonth()]
+      
 
       for(let i=0; i<nowDAYS; i++) {
         this.resultCalendar.push("")
@@ -92,12 +151,7 @@ const app = new Vue({
       }
       
 
-      console.log(getDATE)
-      console.log(getYEAR)
-      console.log(getMonth)
-      console.log(getDAYS)
-      console.log(nowDAYS)
-      console.log(HOWDAYs)
+      
       console.log("remainBlank: "+remainBlank)
       console.log(this.resultCalendar)
       console.log(this.leapYear)
@@ -105,11 +159,9 @@ const app = new Vue({
     },
 
     insertWeather() {
-      var openWeatherMapURL = "https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON&dataCd=ASOS&dateCd=DAY&startDt=20220101&endDt=20220102&stnIds=159"
-
-      axios
-        .get(openWeatherMapURL)
+      axios.get('https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON&dataCd=ASOS&dateCd=DAY&startDt=20220101&endDt=20220102&stnIds=159')
         .then(data => {
+          console.log("AXIOS ACCESS")
           console.log(data.data.response.body.items.item[0].avgTa)
         })
         .catch(error => {
