@@ -2,10 +2,76 @@
   font-family: 'Noto Sans KR', sans-serif;
 }
 
+#selectedYear {
+  height: 2.5rem;
+  width: 10%;
+  text-align: right;
+  font-size: 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 900;
+  /* background: #833333; */
+  border: #efefef solid 0px;
+  color: #313131;
+  /* margin: 0 2%; */
+}
+
+#selectedMonth {
+  height: 2.5rem;
+  width: 9%;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  /* background: #334483; */
+  border: #efefef solid 0px;
+  color: #313131;
+}
+
+.btnRight {
+  height: 2.5rem;
+  /* color: #3CD243; */
+  color: #313131;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-weight: 900;
+  /* background: #F2FFD8; */
+  border: #efefef solid 0px;
+}
+
+.btnLeft {
+  height: 2.5rem;
+  /* color: #3CD243; */
+  color: #313131;
+  border-radius: 0.5rem 0 0 0.5rem;
+  font-weight: 900;
+  /* background: #F2FFD8; */
+  border: #efefef solid 0px;
+  margin-left: 1%;
+}
+
+#searchButton {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  align-items: center;
+  font-size: 1rem;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  background: #3CD243;
+  border: #efefef solid 0px;
+  width: 7%;
+  height: 2.5rem;
+  margin-left: 2%;
+}
+
+.selectMonthWrap #selectedMonth option {
+  font-size: 12px;
+}
+
 .tableWrap {
   position: relative;
   width: 80%;
-  height: 40%;
+  height: 45%;
   margin: 0 auto;
 }
 
@@ -19,7 +85,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px 0;
+  margin: 15px 0;
   /* background-color: wheat; */
 }
 
@@ -30,19 +96,60 @@
 
 .tableBorder {
   position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center
+  width: 35%;
+  height: 49%;
+  text-align: center;
+  padding: 10px;
+  margin: 10px auto;
+  border-radius: 20px;
+  background: #FBFBFB;
 }
 
 tr {
   position: relative;
-  width: 80%;
+  width: 50%;
+  font-size: 0.8rem;
 }
 
 td {
-  border: rgb(239, 239, 239) solid 2px;
-  border-radius: 10px;
-  /* height:100%; */
+  position: relative;
+  font-weight: 400;
+  font-size: 0.8rem;
+  border: rgb(239, 239, 239) solid 0px;
+  border-radius: 20px;
+  /* width: 10%; */
+  height: 15%;
   /* margin: 0; */
+}
+
+td:first-child, td:last-child, th:first-child, th:last-child {
+  color: red;
+}
+
+tbody tr td div {
+  /* position: absolute; */
+  top: 10%;
+  /* align-items: center; */
+  left: 10%;
+}
+
+#weatherDisplayWrap{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+#weatherDisplayWrap span {
+  padding: 1%;
+  margin: 0.3%;
+  font-size: 0.5rem;
+  text-align: center;
+  background: #f5f5f5;
+  border-radius: 1rem;
+}
+
+#weatherDisplayWrap span div:first-child {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
 }

@@ -19,17 +19,16 @@
   <div id='app'>
     <div class="tableWrap">
       <div class="selectOptionWrap">
-        <input type="number" id="selectedYear" :value="nowDATE[0]">
-        <select id="selectedMonth">
-          <option v-for="(whatMonth,i) in monthNum" :key= "whatMonth" :value= monthNum[i]>{{ whatMonth }}</option>
+        <input type="number" id="selectedYear" v-model=nowDATE[0]>
+        <button class="btnLeft" @click="monthMOVEL"><</button>
+        <select id="selectedMonth" v-model=nowDATE[1] @change=YearMonthSelect($event)>
+          <option v-for="(whatMonth,i) in monthNum" :key= "whatMonth" :value= monthNum[i]>{{ whatMonth }}월</option>
         </select>
+        <button class="btnRight" @click="monthMOVER">></button>
         <!-- <button v-for="(whatMonth,i) in monthNum" :key= "whatMonth" :value= monthNum>{{ whatMonth }}월</button> -->
-        <button>조회</button>
+        <button id="searchButton" @click="YearMonthSelected()">조 회</button>
       </div>
       
-      <div class="selectMonthWrap">
-        <div class="selectMonth"><button><</button>  {{ nowDATE[1] }}월  <button @click="monthMOVER">></button></div>
-      </div>
       <table class="tableBorder">
         <thead>
           <tr>
@@ -38,28 +37,50 @@
         </thead>
         <tbody>
           <tr>
-            <td v-for="(resultCalendarRow_1,i) in resultCalendarRow1" :key="resultCalendarRow_1" @click="[selectDATE=resultCalendarRow1[i], selectDayNum()]" :value=resultCalendarRow1[i]>{{ resultCalendarRow_1 }}</td>
+            <td v-for="(resultCalendarRow_1,i) in resultCalendarRow[0].dayNumber" :key="resultCalendarRow_1" @click="[selectDATE=resultCalendarRow[0].dayNumber[i], selectDayNum()]" :value=resultCalendarRow[0].dayNumber[i]>
+              <div>{{ resultCalendarRow_1 }}</div>
+              <span>{{ resultCalendarRow[0].weather[i] }}</span>
+            </td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_2,i) in resultCalendarRow2" :key="resultCalendarRow_2" @click="[selectDATE=resultCalendarRow2[i], selectDayNum()]" :value=resultCalendarRow2[i]>{{ resultCalendarRow_2 }}</td>
+            <td v-for="(resultCalendarRow_2,i) in resultCalendarRow[1].dayNumber" :key="resultCalendarRow_2" @click="[selectDATE=resultCalendarRow[1].dayNumber[i], selectDayNum()]" :value=resultCalendarRow[1].dayNumber[i]>
+              <div>{{ resultCalendarRow_2 }}</div>
+              <span>{{ resultCalendarRow[1].weather[i] }}</span>
+            </td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_3,i) in resultCalendarRow3" :key="resultCalendarRow_3" @click="[selectDATE=resultCalendarRow3[i], selectDayNum()]" :value=resultCalendarRow3[i]>{{ resultCalendarRow_3 }}</td>
+            <td v-for="(resultCalendarRow_3,i) in resultCalendarRow[2].dayNumber" :key="resultCalendarRow_3" @click="[selectDATE=resultCalendarRow[2].dayNumber[i], selectDayNum()]" :value=resultCalendarRow[2].dayNumber[i]>
+              <div>{{ resultCalendarRow_3 }}</div>
+              <span>{{ resultCalendarRow[2].weather[i] }}</span>
+            </td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_4,i) in resultCalendarRow4" :key="resultCalendarRow_4" @click="[selectDATE=resultCalendarRow4[i], selectDayNum()]" :value=resultCalendarRow4[i]>{{ resultCalendarRow_4 }}</td>
+            <td v-for="(resultCalendarRow_4,i) in resultCalendarRow[3].dayNumber" :key="resultCalendarRow_4" @click="[selectDATE=resultCalendarRow[3].dayNumber[i], selectDayNum()]" :value=resultCalendarRow[3].dayNumber[i]>
+              <div>{{ resultCalendarRow_4 }}</div>
+              <span>{{ resultCalendarRow[3].weather[i] }}</span>
+            </td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_5,i) in resultCalendarRow5" :key="resultCalendarRow_5" @click="[selectDATE=resultCalendarRow5[i], selectDayNum()]" :value=resultCalendarRow5[i]>{{ resultCalendarRow_5 }}</td>
+            <td v-for="(resultCalendarRow_5,i) in resultCalendarRow[4].dayNumber" :key="resultCalendarRow_5" @click="[selectDATE=resultCalendarRow[4].dayNumber[i], selectDayNum()]" :value=resultCalendarRow[4].dayNumber[i]>
+              <div>{{ resultCalendarRow_5 }}</div>
+              <span>{{ resultCalendarRow[4].weather[i] }}</span>
+            </td>
           </tr>
           <tr>
-            <td v-for="(resultCalendarRow_6,i) in resultCalendarRow6" :key="resultCalendarRow_6" @click="[selectDATE=resultCalendarRow6[i], selectDayNum()]" :value:class=resultCalendarRow6[i]>{{ resultCalendarRow_6 }}</td>
+            <td v-for="(resultCalendarRow_6,i) in resultCalendarRow[5].dayNumber" :key="resultCalendarRow_6" @click="[selectDATE=resultCalendarRow[5].dayNumber[i], selectDayNum()]" :value=resultCalendarRow[5].dayNumber[i]>
+              <div>{{ resultCalendarRow_6 }}</div>
+              <span>{{ resultCalendarRow[5].weather[i] }}</span>
+            </td>
           </tr>
         </tbody>
       </table>
-      <!-- <v-calendar is-expanded />
-      <v-calendar></v-calendar>
-      <v-date-picker v-model='selectedDate' /> -->
+      <div id="weatherDisplayWrap">
+        <span v-for="(weeklyWeather, i) in selectedWeather[0].weather" :key="weeklyWeather">
+          <div class="weeklyTemp">{{ selectedWeather[0].sDate[i] }}일</div>
+          <div class="weeklyTemp">{{ selectedWeather[0].weather[i] }}°C</div>
+        </span>
+      </div>
+      
     </div>
   </div>
   <script src="./app.js"></script>
