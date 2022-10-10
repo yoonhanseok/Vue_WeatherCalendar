@@ -105,12 +105,19 @@ const app = new Vue({
           console.log(weatherApi)
           console.log(data.data.response.body.items.item[0].avgTa)
           this.selectedWeather[0].weather.splice(0)
-          for(i=0; i<7; i++) {
-            this.selectedWeather[0].weather[i] = Math.round(data.data.response.body.items.item[i].avgTa)
+          if(this.HOWDAYS < this.selectendDATE){
+            var rotateNum = Number(this.HOWDAYS) - Number(this.selectDATE) + 1
+            for(i=0; i<=rotateNum; i++){
+              this.selectedWeather[0].weather[i] = Math.round(data.data.response.body.items.item[i].avgTa)
+              this.selectedWeather[0].sDate[i] = Number(this.selectDATE)+i
+            }
+          } else {
+            for(i=0; i<7; i++) {
+              this.selectedWeather[0].weather[i] = Math.round(data.data.response.body.items.item[i].avgTa)
+              this.selectedWeather[0].sDate[i] = Number(this.selectDATE)+i
+            }
           }
-          for(i=0; i<7; i++) {
-            this.selectedWeather[0].sDate[i] = Number(this.selectDATE)+i
-          }
+          
           console.log(this.selectedWeather[0].sDate)
           console.log(this.selectedWeather[0].weather)
         })
