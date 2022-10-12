@@ -2,32 +2,42 @@
   font-family: 'Noto Sans KR', sans-serif;
 }
 
+.selectOptionWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: #313131;
+  font-weight: 900;
+  margin: 5% 0;
+}
+
 #selectedYear {
-  height: 2.5rem;
-  width: 10%;
-  text-align: right;
-  font-size: 1.5rem;
+  height: 7rem;
+  width: 12rem;
+  text-align: center;
+  font-size: 5rem;
   border-radius: 0.5rem;
   font-weight: 900;
-  /* background: #833333; */
   border: #efefef solid 0px;
   color: #313131;
-  /* margin: 0 2%; */
 }
 
 #selectedMonth {
-  height: 2.5rem;
-  width: 9%;
+  height: 7rem;
+  width: 20%;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 4rem;
   font-weight: 900;
-  /* background: #334483; */
+  background: white;
   border: #efefef solid 0px;
   color: #313131;
 }
 
 .btnRight {
-  height: 2.5rem;
+  height: 7rem;
+  width: 3rem;
+  font-size: 2rem;
   /* color: #3CD243; */
   color: #313131;
   border-radius: 0 0.5rem 0.5rem 0;
@@ -37,14 +47,16 @@
 }
 
 .btnLeft {
-  height: 2.5rem;
+  height: 7rem;
+  width: 3rem;
+  font-size: 2rem;
   /* color: #3CD243; */
   color: #313131;
   border-radius: 0.5rem 0 0 0.5rem;
   font-weight: 900;
   /* background: #F2FFD8; */
   border: #efefef solid 0px;
-  margin-left: 1%;
+  margin-left: 5%;
 }
 
 #searchButton {
@@ -53,15 +65,15 @@
   position: relative;
   text-align: center;
   align-items: center;
-  font-size: 1rem;
+  font-size: 3rem;
   color: white;
   border-radius: 0.5rem;
   font-weight: 600;
   background: #3CD243;
   border: #efefef solid 0px;
-  width: 7%;
-  height: 2.5rem;
-  margin-left: 2%;
+  width: 30%;
+  height: 7rem;
+  margin-left: 5%;
 }
 
 .selectMonthWrap #selectedMonth option {
@@ -70,15 +82,9 @@
 
 .tableWrap {
   position: relative;
-  width: 80%;
-  height: 45%;
+  width: 90%;
+  height: 50%;
   margin: 0 auto;
-}
-
-.selectOptionWrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .selectMonthWrap {
@@ -96,11 +102,11 @@
 
 .tableBorder {
   position: relative;
-  width: 35%;
-  height: 49%;
+  width: 100%;
+  height: 80%;
   text-align: center;
-  padding: 10px;
-  margin: 10px auto;
+  padding: 4%;
+  margin: 5% auto;
   border-radius: 20px;
   background: #FBFBFB;
 }
@@ -108,13 +114,13 @@
 tr {
   position: relative;
   width: 50%;
-  font-size: 0.8rem;
+  font-size: 2.5rem;
 }
 
 td {
   position: relative;
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 3rem;
   border: rgb(239, 239, 239) solid 0px;
   border-radius: 20px;
   /* width: 10%; */
@@ -141,15 +147,22 @@ tbody tr td div {
 }
 
 #weatherDisplayWrap span {
-  padding: 1%;
-  margin: 0.3%;
-  font-size: 0.5rem;
+  padding: 3% 1%;
+  margin: 1%;
+  font-size: 1.8rem;
   text-align: center;
   background: #f5f5f5;
-  border-radius: 1rem;
+  border-radius: 3rem;
+  width: 13%;
 }
-
+#weatherDisplayWrap span div {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  
+}
 #weatherDisplayWrap span div:first-child {
-  font-size: 0.8rem;
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 900;
+
 }
