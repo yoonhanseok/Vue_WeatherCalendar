@@ -20,6 +20,7 @@ const app = new Vue({
       selectedWeather: [{sDate:['-', '-', '-', '-', '-', '-', '-'], weather:['-', '-', '-', '-', '-', '-', '-'], tempMin:['-', '-', '-', '-', '-', '-', '-'], tempMax:['-', '-', '-', '-', '-', '-', '-'], tempAvg:['-', '-', '-', '-', '-', '-', '-'] }],
     }
   },
+  
   created() {
     this.nowTIME()
     
@@ -27,10 +28,16 @@ const app = new Vue({
     this.insertWeather()
     this.leapChecked()
     console.log(this.resultCalendarRow)
+    
   },
 
   computed() {
     this.YearMonthSelected()
+    this.selectDayNum()
+  },
+
+  updated() {
+    
   },
 
   methods: {
@@ -51,7 +58,6 @@ const app = new Vue({
         console.log(this.resultCalendar)
         console.log(this.leapYear)
       }
-      this.YearMonthSelected()
     },
 
     monthMOVEL() {
@@ -71,7 +77,6 @@ const app = new Vue({
         console.log(this.resultCalendar)
         console.log(this.leapYear)
       }
-      this.YearMonthSelected()
     },
 
     nowTIME() {
@@ -96,8 +101,12 @@ const app = new Vue({
       console.log("HOWDAYS: " + this.HOWDAYS)
     },
 
+    selectColoring() {
+
+    },
+
     selectDayNum() {
-      for(i=0; i<6; i++){
+      for(i=0; i<7; i++){
         this.selectedWeather[0].tempAvg[i] = '-'
         this.selectedWeather[0].tempMin[i] = '-'
         this.selectedWeather[0].tempMax[i] = '-'
@@ -140,14 +149,14 @@ const app = new Vue({
         this.endDATE = this.nowDATE[0]+selectedMonth+this.HOWDAYS
       }
 
-      // ===== 단기 예보 ===== 당일 이전의 기상자료 조회
+      // ===== 과거 예보 ===== 당일 이전의 기상자료 조회
       
       var weatherApiShort = 'https://apis.data.go.kr/1360000/AsosDalyInfoService/getWthrDataList?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=10&dataType=JSON&dataCd=ASOS&dateCd=DAY&startDt='+this.startDATE+'&endDt='+this.endDATE+'&stnIds=159'
       axios.get(weatherApiShort)
         .then(data => {
           console.log("AXIOS ACCESS")
-          console.log("단기예보 API: "+weatherApiShort)
-          console.log("단기예보: "+data.data.response.body.items.item[0].avgTa)
+          console.log("과거예보 API: "+weatherApiShort)
+          console.log("과거예보: "+data.data.response.body.items.item[0].avgTa)
           console.log("HOWDAYS: "+this.HOWDAYS)
           console.log("selectendDATE: "+this.selectendDATE)
           if(this.HOWDAYS < this.selectendDATE){
@@ -157,6 +166,13 @@ const app = new Vue({
             // this.selectedWeather[0].sDate.splice(0)
             var rotateNum = Number(this.HOWDAYS) - Number(this.selectDATE) + 1
             console.log("rotateNum: "+rotateNum)
+
+            for(i=rotateNum; i<7-rotateNum+1; i++){
+              this.selectedWeather[0].tempAvg[i] = '-'
+              this.selectedWeather[0].tempMin[i] = '-'
+              this.selectedWeather[0].tempMax[i] = '-'
+              this.selectedWeather[0].sDate[i] = '-'
+            }
             for(i=0; i<=rotateNum; i++){
               console.log("i=0; i<=rotateNum; i++")
               this.selectedWeather[0].tempAvg[i] = Math.round(data.data.response.body.items.item[i].avgTa)
@@ -182,6 +198,8 @@ const app = new Vue({
           console.log(String(this.selectedWeather[0].tempAvg))
           console.log(String(this.selectedWeather[0].tempMin))
           console.log(String(this.selectedWeather[0].tempMax))
+
+          this.YearMonthSelected()
         })
         .catch(error => {
           console.log("에러 발생 ERROR"+error)
@@ -248,8 +266,8 @@ const app = new Vue({
 
     YearMonthSelected() {
       
+      this.resultCalendar.splice(0)
       for(i=0; i < 6; i++){
-        this.resultCalendar.splice(0)
         this.resultCalendarRow[i].dayNumber.splice(0)
       }
 
@@ -278,7 +296,7 @@ const app = new Vue({
       // <===== 달력에 들어가는 숫자 데이터 삽입 =====>
       for(let i=0; i<this.nowDATE[3]; i++) {
         this.resultCalendar.push("")
-      }// 선택한 달의 1일에 해당하는 요일보다 1일 적게 빈칸을 앞쪽에 삽입
+      }// 선택한 달의 1일에 해당하는 요일(숫자로 표현되어 있음)보다 1일 적게 빈칸을 앞쪽에 삽입
 
       for(let i=1; i<=this.HOWDAYS; i++) {
         this.resultCalendar.push(String(i))
@@ -421,12 +439,9 @@ const app = new Vue({
         this.setDATE = String(this.startDATE) + '1800'
         console.log("setDATE: " + this.setDATE)
       }
-      // this.selectedWeather[0].tempMin.splice(0)
-      
       
       var weatherApi3to10 = 'https://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=10&dataType=json&regId=11H20201&tmFc='+this.setDATE
       
-
       axios.get(weatherApi3to10)
         .then(data => {
           console.log("중기 기온: AXIOS ACCESS")
@@ -503,123 +518,74 @@ const app = new Vue({
           console.log(this.selectedWeather[0].weather)
         })
         .catch(error => {
-          console.log("에러 발생 ERROR"+error)
+          console.log("에러 발생: "+error)
         })
 
+        // //===== 공휴일 =====
+
+        // if(this.nowDATE[1] < 10) {
+        //   var stringMonth = '0'+String(this.nowDATE[1])
+        // } else {
+        //   var stringMonth = String(this.nowDATE[1])
+        // }
+        // var holidayApi = 'https://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&solYear='+this.nowDATE[0]+'&solMonth='+stringMonth
+        // axios.get(holidayApi).then(data => {
+        //   console.log('공휴일 API: '+holidayApi)
+        //   console.log(data.data.response.body.items.item[0].dateName)
+        // }).catch(error => {
+        //   console.log("에러 발생: "+error)
+        // })
 
         // ===== 당일 / 모레 =====
-      //   if(this.nowDATE[4] >= 0 && this.nowDATE[4] <= 2) {
-      //     this.setDATE = this.startDATE+'2300'
-      //     console.log("setDATE: " + this.setDATE)
-      //   } else if(this.nowDATE[4] >= 3 && this.nowDATE[4] <= 5) {
-      //     this.setDATE = this.startDATE+'0200'
-      //     console.log("setDATE: " + this.setDATE)
-      //   } else if(this.nowDATE[4] >= 6 && this.nowDATE[4] <= 8) {
-      //     this.setDATE = this.startDATE+'0500'
-      //     console.log("setDATE: " + this.setDATE)
-      //   } else if(this.nowDATE[4] >= 9 && this.nowDATE[4] <= 11) {
-      //     this.setDATE = this.startDATE+'0800'
-      //     console.log("setDATE: " + this.setDATE)
-      //   } else if(this.nowDATE[4] >= 12 && this.nowDATE[4] <= 14) {
-      //     this.setDATE = this.startDATE+'1100'
-      //     console.log("setDATE: " + this.setDATE)
-      //   } else if(this.nowDATE[4] >= 15 && this.nowDATE[4] <= 17) {
-      //     this.setDATE = this.startDATE+'1400'
-      //     console.log("setDATE: " + this.setDATE)
-      //   } else if(this.nowDATE[4] >= 18 && this.nowDATE[4] <= 20) {
-      //     this.setDATE = this.startDATE+'1700'
-      //     console.log("setDATE: " + this.setDATE)
-      //   } else if(this.nowDATE[4] >= 21 && this.nowDATE[4] <= 23) {
-      //     this.setDATE = this.startDATE+'2000'
-      //     console.log("setDATE: " + this.setDATE)
-      //   }
+        // if(this.nowDATE[4] >= 0 && this.nowDATE[4] <= 2) {
+        //   this.setDATE = this.startDATE+'2300'
+        //   console.log("setDATE: " + this.setDATE)
+        // } else if(this.nowDATE[4] >= 3 && this.nowDATE[4] <= 5) {
+        //   this.setDATE = this.startDATE+'0200'
+        //   console.log("setDATE: " + this.setDATE)
+        // } else if(this.nowDATE[4] >= 6 && this.nowDATE[4] <= 8) {
+        //   this.setDATE = this.startDATE+'0500'
+        //   console.log("setDATE: " + this.setDATE)
+        // } else if(this.nowDATE[4] >= 9 && this.nowDATE[4] <= 11) {
+        //   this.setDATE = this.startDATE+'0800'
+        //   console.log("setDATE: " + this.setDATE)
+        // } else if(this.nowDATE[4] >= 12 && this.nowDATE[4] <= 14) {
+        //   this.setDATE = this.startDATE+'1100'
+        //   console.log("setDATE: " + this.setDATE)
+        // } else if(this.nowDATE[4] >= 15 && this.nowDATE[4] <= 17) {
+        //   this.setDATE = this.startDATE+'1400'
+        //   console.log("setDATE: " + this.setDATE)
+        // } else if(this.nowDATE[4] >= 18 && this.nowDATE[4] <= 20) {
+        //   this.setDATE = this.startDATE+'1700'
+        //   console.log("setDATE: " + this.setDATE)
+        // } else if(this.nowDATE[4] >= 21 && this.nowDATE[4] <= 23) {
+        //   this.setDATE = this.startDATE+'2000'
+        //   console.log("setDATE: " + this.setDATE)
+        // }
 
-
-
-      // var resultData = data?.slice(0, 12);
-      // console.log("resultData: " + resultData)
-
-      // var weathertmp = resultData?.filter(filterData => filterData.category === 'TMP')[0]?.fcstValue;
-      // var weathertmn = resultData?.filter(filterData => filterData.category === 'TMN')[0]?.fcstValue;
-      // var weathertmx = resultData?.filter(filterData => filterData.category === 'TMX')[0]?.fcstValue;
-      // var weathersky = resultData?.filter(filterData => filterData.category === 'SKY')[0]?.fcstValue;
-      // console.log("TMP: "+weathertmp)
-      // console.log("TMN: "+weathertmn)
-      // console.log("TMX: "+weathertmx)
-      // console.log("SKY: "+weathersky)
-
-
-      // let result = []
-
-      // for (let i = 0; i < data?.length; i += 12) {
-      //     if (result.length > 2 || data.length < 0) {
-      //         return
-      //     } else {
-      //             var resultData = data?.slice(i, i + 12);
-      //             console.log(resultData)
-
-      //             var fcstTime = resultData[0].fcstTime.slice(0, 2);
-      //             var pop = resultData?.filter(filterData => filterData.category === 'TMP')[0]?.fcstValue;
-      //             var tmp = resultData?.filter(filterData => filterData.category === 'TMN')[0]?.fcstValue;
-      //             var tmp = resultData?.filter(filterData => filterData.category === 'TMX')[0]?.fcstValue;
-      //             var tmp = resultData?.filter(filterData => filterData.category === 'SKY')[0]?.fcstValue;
-      //             //ForecastSky는 enum
-      //             result.push({
-      //                 fcstTime,
-      //                 pop,
-      //                 tmp,
-      //                 sky
-      //             })
-              
-      //       }
-      //     }        
-      //     console.log("결과: "+result)
-              
-
-      //   var weatherApi1to2 = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=1000&dataType=json&base_date="+this.setDATE+"&base_time=0200&nx=98&ny=77"
-      // axios.get(weatherApi1to2)
-      //   .then(data => {
-      //     console.log("AXIOS ACCESS")
-      //     console.log(weatherApi1to2)
-      //     console.log("당일 기온: " + data.data.response.body.items.item[0].taMin3)
-          
-      //     // if(this.HOWDAYS < this.selectendDATE){
-      //     //   this.selectedWeather[0].tempMin.splice(0,2)
-      //     //   this.selectedWeather[0].tempMax.splice(0,2)
-      //     //   this.selectedWeather[0].tempAvg.splice(0,2)
-      //     //   var rotateNum = Number(this.HOWDAYS) - Number(this.selectDATE) + 1
-      //     //   for(i=0; i<=rotateNum; i++){
-      //     //     console.log("this.HOWDAYS < this.selectendDATE ACCESS")
-      //     //     this.selectedWeather[0].tempMin[i] = '-'
-      //     //     this.selectedWeather[0].sDate[i] = Number(this.selectDATE)+i
-      //     //   }
-      //     // } else {
-      //     //   this.selectedWeather[0].tempMin.splice(0,2)
-      //     //   this.selectedWeather[0].tempMax.splice(0,2)
-      //     //   this.selectedWeather[0].tempAvg.splice(0,2)
-      //     //   for(i=2; i<7; i++){
-      //     //     console.log("i=2; i<7; i++ ACCESS")
-      //     //     this.selectedWeather[0].sDate[i] = Number(this.selectDATE)+i
-      //     //   }
-      //     //   this.selectedWeather[0].tempMin[2] = data.data.response.body.items.item[0].taMin3
-      //     //   this.selectedWeather[0].tempMin[3] = data.data.response.body.items.item[0].taMin4
-      //     //   this.selectedWeather[0].tempMin[4] = data.data.response.body.items.item[0].taMin5
-      //     //   this.selectedWeather[0].tempMin[5] = data.data.response.body.items.item[0].taMin6
-      //     //   this.selectedWeather[0].tempMin[6] = data.data.response.body.items.item[0].taMin7
-      //     //   this.selectedWeather[0].tempMax[2] = data.data.response.body.items.item[0].taMax3
-      //     //   this.selectedWeather[0].tempMax[3] = data.data.response.body.items.item[0].taMax4
-      //     //   this.selectedWeather[0].tempMax[4] = data.data.response.body.items.item[0].taMax5
-      //     //   this.selectedWeather[0].tempMax[5] = data.data.response.body.items.item[0].taMax6
-      //     //   this.selectedWeather[0].tempMax[6] = data.data.response.body.items.item[0].taMax7
-      //     // }
-          
-      //     console.log(this.selectedWeather[0].sDate)
-      //     console.log(this.selectedWeather[0].tempMin)
-      //     console.log(this.selectedWeather[0].tempMax)
-      //   })
-      //   .catch(error => {
-      //     console.log("에러 발생 ERROR"+error)
-      //   })
+        // var weatherApi1to2 = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=UmNcoQgZJ%2FJt4NzOju%2BLwwnLlK0AIuRFcJSDIH3QP32%2B3MBj7yYcL2RTGOkzKskBph1h3mlsUQZwcotcHSX1GA%3D%3D&pageNo=1&numOfRows=1000&dataType=json&base_date="+this.setDATE+"&base_time=0200&nx=98&ny=77"
+        // axios.get(weatherApi1to2)
+        //   .then(data => {
+        //     console.log("weatherApi1to2 ACCESS")
+        //     console.log(weatherApi1to2)
+        //     // console.log(result.length)
+        //     console.log(data.length)
+            
+        //               var resultData = data.slice(0, 12)
+        //               console.log("resultData: " + resultData)
+    
+        //               var weathertmp = resultData.filter(filterData => filterData.category === 'TMP')[0]?.fcstValue
+        //               var weathertmn = resultData.filter(filterData => filterData.category === 'TMN')[0]?.fcstValue
+        //               var weathertmx = resultData.filter(filterData => filterData.category === 'TMX')[0]?.fcstValue
+        //               var weathersky = resultData.filter(filterData => filterData.category === 'SKY')[0]?.fcstValue
+        //               console.log("TMP: "+weathertmp)
+        //               console.log("TMN: "+weathertmn)
+        //               console.log("TMX: "+weathertmx)
+        //               console.log("SKY: "+weathersky)
+        //   })
+        //   .catch(error => {
+        //     console.log("에러 발생 ERROR"+error)
+        //   })
     }
   }
 })
