@@ -34,14 +34,14 @@ const app = new Vue({
 
     this.weather1to2()
     this.weather3to7()
-    this.leapChecked()
+    this.firstRander()
     console.log(this.resultCalendarRow)
     
   },
 
   computed() {
-    // this.YearMonthSelected()
-    // this.selectDayNum()
+    this.YearMonthSelected()
+    this.selectDayNum()
   },
 
   updated() {
@@ -113,7 +113,6 @@ const app = new Vue({
 
     selectDayNum() { // 달력의 날짜를 누르면 작동하는 함수
       
-
       for(i=0; i<7; i++){
         //주간 날씨에 들어가는 모든 기록(index[0]부터 [6]까지) 초기화
         this.selectedWeather[0].tempAvg[i] = '-'
@@ -314,7 +313,7 @@ const app = new Vue({
       }
     },
 
-    leapChecked() { // 브라우저 로딩 후 달력을 처음 랜더링하는 함수
+    firstRander() { // 브라우저 로딩 후 달력을 처음 랜더링하는 함수
       
       for(i=0; i<7; i++){
         this.selectedWeather[0].sDate[i] = Number(this.nowDATE[2])+i
@@ -373,7 +372,7 @@ const app = new Vue({
                   "setDATE: "+this.setDATE)
     },
 
-    weather3to7() { // 브라우저 첫 로딩 후 3~7일 사이의 날씨를 랜더링하는 함수
+    weather3to7() { // 브라우저 첫 로딩 후 현재일을 기준으로 3~7일 사이의 날씨를 랜더링하는 함수
       // this.dateStartEnd()
 
       // ======================================= 당일 부터 3~7일까지의 중기 기온 API ======================================= 
